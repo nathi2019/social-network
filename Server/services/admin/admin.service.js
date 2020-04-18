@@ -2,7 +2,8 @@ const
     path = require('path'),
     { ApiResponse } = require(path.join(__dirname, "..", "..", "util")),
     { Ad, User, Post } = require(path.join(__dirname, '..', '..', 'models')),
-    { filterService } = require(path.join(__dirname, '..', 'shared'));
+    { filterService } = require(path.join(__dirname, '..', 'shared')),
+    { notiTypes } = require(path.join(__dirname, '..', '..', 'util'));
 
 function addBadWord(bWord) {
     try {
@@ -113,11 +114,15 @@ async function getDeactivatedAccounts() {
     return results;
 }
 
-// async function getBadWordedPosts() {
-//     let results = await User.find({ 'notifications.notiType': {} })
+async function getBadWordedPosts() {
+    let results = await User.find({ 'notifications.notiType': { $elematch: { notiType: notiTypes.POST_FLAGGED } } })
+        .populate('post')
+        .populate('user')
+        .execPopuate();
+    console.log('BAD WORD NOTIFICATION FETCHED...........', results)
 
 
-// }
+}
 
 module.exports = {
     deleteAd,
@@ -134,5 +139,5 @@ module.exports = {
     rejectThisPost,
     activateThisAccount,
     getDeactivatedAccounts,
-    // getBadWordedPosts
+    getBadWordedPosts
 }

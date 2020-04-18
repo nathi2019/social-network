@@ -22,6 +22,21 @@ export class AdminPostReviewComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  pullBadPostNotification(){
+    this.adminService.getBadWordedPosts().pipe(first())
+                    .subscribe(response=>{
+                      console.log('NOTIFICATION REVEIVED.......', response.result);
+                    })
+  }
+    getBadWordedPosts
+
+
+
+
+
+
+
   acceptBadPost(badPost,index){
     this.adminService.approvePost(badPost)
                      .pipe(first())
